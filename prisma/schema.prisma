@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Transaction {
+  id            String   @id @default(cuid())
+  amount        Int // dalam Rupiah (tanpa desimal)
+  description   String?
+  category      String // "daily" | "transport" | "entertainment"
+  subCategory   String? // "makan_siang", "kopi", dll
+  paymentSource String // "qris" | "brimo" | "cash" | "ewallet" | "dana" | "gopay"
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([createdAt])
+  @@index([category])
+}
+
+model Budget {
+  id     String @id @default(cuid())
+  month  Int // 1-12
+  year   Int
+  amount Int // target budget bulanan dalam Rupiah
+
+  @@unique([month, year])
+}
+
+model Shortcut {
+  id            String  @id @default(cuid())
+  label         String // "Makan Siang"
+  icon          String // emoji "🍚"
+  amount        Int // nominal default
+  category      String
+  subCategory   String?
+  paymentSource String
+  sortOrder     Int     @default(0)
+  isActive      Boolean @default(true)
+}

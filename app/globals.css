@@ -1,26 +1,305 @@
 @import "tailwindcss";
 
+/* ============================
+   SAKU Design System
+   Dark-first, mobile-first
+   ============================ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Brand palette */
+  --saku-bg: #0c0f1a;
+  --saku-surface: #141828;
+  --saku-surface-hover: #1a2035;
+  --saku-surface-raised: #1e2540;
+  --saku-border: #252d45;
+  --saku-border-subtle: #1c2338;
+
+  /* Text */
+  --saku-text: #f0f2f8;
+  --saku-text-secondary: #8892b0;
+  --saku-text-muted: #5a6380;
+
+  /* Accent — Emerald */
+  --saku-accent: #34d399;
+  --saku-accent-dim: #10b981;
+  --saku-accent-glow: rgba(52, 211, 153, 0.15);
+
+  /* Semantic colors */
+  --saku-expense: #f472b6;
+  --saku-expense-dim: #ec4899;
+  --saku-expense-glow: rgba(244, 114, 182, 0.15);
+  --saku-warning: #fbbf24;
+  --saku-warning-glow: rgba(251, 191, 36, 0.12);
+  --saku-danger: #f87171;
+
+  /* Category colors */
+  --saku-cat-daily: #34d399;
+  --saku-cat-transport: #60a5fa;
+  --saku-cat-entertainment: #c084fc;
+
+  /* Spacing */
+  --saku-radius-sm: 8px;
+  --saku-radius-md: 12px;
+  --saku-radius-lg: 16px;
+  --saku-radius-xl: 24px;
+  --saku-radius-full: 9999px;
+
+  /* Shadows */
+  --saku-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+  --saku-shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.4);
+
+  /* Fonts */
+  --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), "JetBrains Mono", monospace;
+
+  /* Background & foreground (Tailwind compat) */
+  --background: var(--saku-bg);
+  --foreground: var(--saku-text);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-saku-bg: var(--saku-bg);
+  --color-saku-surface: var(--saku-surface);
+  --color-saku-surface-hover: var(--saku-surface-hover);
+  --color-saku-surface-raised: var(--saku-surface-raised);
+  --color-saku-border: var(--saku-border);
+  --color-saku-border-subtle: var(--saku-border-subtle);
+  --color-saku-text: var(--saku-text);
+  --color-saku-text-secondary: var(--saku-text-secondary);
+  --color-saku-text-muted: var(--saku-text-muted);
+  --color-saku-accent: var(--saku-accent);
+  --color-saku-accent-dim: var(--saku-accent-dim);
+  --color-saku-expense: var(--saku-expense);
+  --color-saku-expense-dim: var(--saku-expense-dim);
+  --color-saku-warning: var(--saku-warning);
+  --color-saku-danger: var(--saku-danger);
+  --color-saku-cat-daily: var(--saku-cat-daily);
+  --color-saku-cat-transport: var(--saku-cat-transport);
+  --color-saku-cat-entertainment: var(--saku-cat-entertainment);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ============================
+   Base styles
+   ============================ */
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  background: var(--saku-bg);
+  color: var(--saku-text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--saku-bg);
+  color: var(--saku-text);
+  min-height: 100dvh;
+  overscroll-behavior-y: contain;
+}
+
+/* ============================
+   Scrollbar (thin, subtle)
+   ============================ */
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--saku-border);
+  border-radius: 4px;
+}
+
+/* ============================
+   Animations
+   ============================ */
+
+@keyframes saku-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes saku-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes saku-slide-down {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+}
+
+@keyframes saku-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes saku-pulse-success {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 var(--saku-accent-glow);
+  }
+  50% {
+    transform: scale(0.96);
+    box-shadow: 0 0 0 8px transparent;
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+@keyframes saku-bar-grow {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes saku-progress-fill {
+  from {
+    width: 0%;
+  }
+}
+
+@keyframes saku-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes saku-check-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ============================
+   Utility classes
+   ============================ */
+
+.saku-animate-fade-in {
+  animation: saku-fade-in 0.3s ease-out;
+}
+
+.saku-animate-slide-up {
+  animation: saku-slide-up 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.saku-animate-scale-in {
+  animation: saku-scale-in 0.2s ease-out;
+}
+
+.saku-animate-pulse-success {
+  animation: saku-pulse-success 0.4s ease-out;
+}
+
+.saku-animate-bar-grow {
+  animation: saku-bar-grow 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform-origin: bottom;
+}
+
+.saku-animate-progress-fill {
+  animation: saku-progress-fill 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.saku-animate-check-pop {
+  animation: saku-check-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Glass card */
+.saku-glass {
+  background: linear-gradient(
+    135deg,
+    rgba(20, 24, 40, 0.8),
+    rgba(30, 37, 64, 0.6)
+  );
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--saku-border-subtle);
+}
+
+/* Skeleton loading */
+.saku-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--saku-surface) 25%,
+    var(--saku-surface-hover) 50%,
+    var(--saku-surface) 75%
+  );
+  background-size: 200% 100%;
+  animation: saku-shimmer 1.5s infinite;
+  border-radius: var(--saku-radius-md);
+}
+
+/* Monospace for numbers */
+.saku-mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+/* Drawer backdrop */
+.saku-backdrop {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+}
+
+/* Number input - hide spinners */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
 }
