@@ -22,31 +22,32 @@ export function QuickInputForm({ onSuccess }: { onSuccess?: () => void }) {
   );
 
   const [amount, setAmount] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedPayment, setSelectedPayment] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("daily");
+  const [selectedPayment, setSelectedPayment] = useState("qris");
 
   const handleAmountChange = useCallback((_raw: string, formatted: string) => {
     setAmount(formatted);
   }, []);
 
   return (
-    <form action={formAction} className="flex flex-col gap-5">
+    <form action={formAction} className="flex flex-col gap-4">
       {/* Amount input */}
       <div>
-        <label className="block text-sm font-medium text-saku-text-secondary mb-2">
-          Nominal
+        <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+          Nominal Pengeluaran
         </label>
         <AmountInput
           name="amount"
           value={amount}
           onValueChange={handleAmountChange}
           placeholder="0"
+          autoFocus
         />
       </div>
 
       {/* Category selector */}
       <div>
-        <label className="block text-sm font-medium text-saku-text-secondary mb-2">
+        <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
           Kategori
         </label>
         <div className="flex gap-2 flex-wrap">
@@ -57,7 +58,7 @@ export function QuickInputForm({ onSuccess }: { onSuccess?: () => void }) {
               variant="pill"
               data-active={selectedCategory === cat.value}
               onClick={() => setSelectedCategory(cat.value)}
-              className="text-xs gap-1.5"
+              className="text-xs py-1.5 px-3"
             >
               <span>{cat.icon}</span>
               {cat.label}
@@ -69,8 +70,8 @@ export function QuickInputForm({ onSuccess }: { onSuccess?: () => void }) {
 
       {/* Payment source selector */}
       <div>
-        <label className="block text-sm font-medium text-saku-text-secondary mb-2">
-          Sumber Dana
+        <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+          Metode Pembayaran
         </label>
         <div className="flex gap-2 flex-wrap">
           {PAYMENT_SOURCE_OPTIONS.map((src) => (
@@ -80,7 +81,7 @@ export function QuickInputForm({ onSuccess }: { onSuccess?: () => void }) {
               variant="pill"
               data-active={selectedPayment === src.value}
               onClick={() => setSelectedPayment(src.value)}
-              className="text-xs gap-1.5"
+              className="text-xs py-1.5 px-3"
             >
               <span>{src.icon}</span>
               {src.label}
@@ -93,22 +94,24 @@ export function QuickInputForm({ onSuccess }: { onSuccess?: () => void }) {
       {/* Description */}
       <TextInput
         name="description"
-        label="Catatan (opsional)"
-        placeholder="Contoh: Makan siang di kantin"
+        label="Catatan (Opsional)"
+        placeholder="Contoh: Makan siang bareng teman"
       />
 
       {/* Error */}
       {state.error && (
-        <p className="text-sm text-saku-danger saku-animate-fade-in">
-          {state.error}
-        </p>
+        <div className="p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
+          <span>⚠️</span>
+          <span>{state.error}</span>
+        </div>
       )}
 
       {/* Success */}
       {state.success && (
-        <p className="text-sm text-saku-accent saku-animate-fade-in">
-          ✓ Transaksi berhasil disimpan
-        </p>
+        <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs flex items-center gap-2">
+          <span>✓</span>
+          <span>Transaksi berhasil disimpan ke Supabase!</span>
+        </div>
       )}
 
       {/* Submit */}
@@ -116,7 +119,7 @@ export function QuickInputForm({ onSuccess }: { onSuccess?: () => void }) {
         type="submit"
         variant="primary"
         isLoading={pending}
-        className="w-full py-3.5 text-base"
+        className="w-full py-3 text-sm font-bold shadow-sm"
       >
         Simpan Transaksi
       </Button>

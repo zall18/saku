@@ -2,11 +2,17 @@
 
 import { db } from "@/lib/db";
 import { refresh } from "next/cache";
+import { getAuthUser } from "@/lib/supabase/server";
 
 /**
  * Create a new transaction from manual input
  */
 export async function createTransaction(formData: FormData) {
+  const user = await getAuthUser();
+  if (!user) {
+    return { error: "Sesi telah berakhir. Silakan login kembali." };
+  }
+
   const amount = parseInt(String(formData.get("amount")).replace(/[^\d]/g, ""), 10);
   const description = formData.get("description") as string | null;
   const category = formData.get("category") as string;
@@ -25,6 +31,7 @@ export async function createTransaction(formData: FormData) {
   try {
     await db.transaction.create({
       data: {
+        userId: user.id,
         amount,
         description: description || null,
         category,
@@ -36,7 +43,7 @@ export async function createTransaction(formData: FormData) {
     return { success: true };
   } catch (error) {
     console.error("Failed to create transaction:", error);
-    return { error: "Gagal menyimpan transaksi. Pastikan koneksi database Supabase sudah dikonfigurasi di .env" };
+    return { error: "Gagal menyimpan transaksi ke database." };
   }
 }
 
@@ -44,17 +51,23 @@ export async function createTransaction(formData: FormData) {
  * Create a transaction from a shortcut (1-tap)
  */
 export async function createQuickTransaction(shortcutId: string) {
+  const user = await getAuthUser();
+  if (!user) {
+    return { error: "Sesi telah berakhir. Silakan login kembali." };
+  }
+
   try {
     const shortcut = await db.shortcut.findUnique({
       where: { id: shortcutId },
     });
 
     if (!shortcut) {
-      return { error: "Shortcut tidak ditemukan di database" };
+      return { error: "Shortcut tidak ditemukan." };
     }
 
     await db.transaction.create({
       data: {
+        userId: user.id,
         amount: shortcut.amount,
         description: shortcut.label,
         category: shortcut.category,
@@ -67,17 +80,22 @@ export async function createQuickTransaction(shortcutId: string) {
     return { success: true, label: shortcut.label, amount: shortcut.amount };
   } catch (error) {
     console.error("Failed to create quick transaction:", error);
-    return { error: "Gagal mencatat transaksi cepat. Pastikan database Supabase terhubung." };
+    return { error: "Gagal mencatat transaksi cepat." };
   }
 }
 
 /**
- * Delete a transaction
+ * Delete a transaction (only for owner)
  */
 export async function deleteTransaction(id: string) {
+  const user = await getAuthUser();
+  if (!user) {
+    return { error: "Sesi telah berakhir. Silakan login kembali." };
+  }
+
   try {
-    await db.transaction.delete({
-      where: { id },
+    await db.transaction.deleteMany({
+      where: { id, userId: user.id },
     });
 
     refresh();
@@ -89,9 +107,14 @@ export async function deleteTransaction(id: string) {
 }
 
 /**
- * Update or create budget for a specific month
+ * Update or create budget for a specific month for current user
  */
 export async function updateBudget(formData: FormData) {
+  const user = await getAuthUser();
+  if (!user) {
+    return { error: "Sesi telah berakhir. Silakan login kembali." };
+  }
+
   const amount = parseInt(String(formData.get("amount")).replace(/[^\d]/g, ""), 10);
   const month = parseInt(String(formData.get("month")), 10);
   const year = parseInt(String(formData.get("year")), 10);
@@ -102,23 +125,39 @@ export async function updateBudget(formData: FormData) {
 
   try {
     await db.budget.upsert({
-      where: { month_year: { month, year } },
+      where: {
+        userId_month_year: {
+          userId: user.id,
+          month,
+          year,
+        },
+      },
       update: { amount },
-      create: { month, year, amount },
+      create: {
+        userId: user.id,
+        month,
+        year,
+        amount,
+      },
     });
 
     refresh();
     return { success: true };
   } catch (error) {
     console.error("Failed to update budget:", error);
-    return { error: "Gagal memperbarui budget. Pastikan database Supabase terhubung." };
+    return { error: "Gagal memperbarui budget." };
   }
 }
 
 /**
- * Create a new shortcut
+ * Create a new shortcut for current user
  */
 export async function createShortcut(formData: FormData) {
+  const user = await getAuthUser();
+  if (!user) {
+    return { error: "Sesi telah berakhir. Silakan login kembali." };
+  }
+
   const label = formData.get("label") as string;
   const icon = formData.get("icon") as string;
   const amount = parseInt(String(formData.get("amount")).replace(/[^\d]/g, ""), 10);
@@ -130,10 +169,16 @@ export async function createShortcut(formData: FormData) {
   }
 
   try {
-    const maxSort = await db.shortcut.aggregate({ _max: { sortOrder: true } });
+    const maxSort = await db.shortcut.aggregate({
+      where: {
+        OR: [{ userId: null }, { userId: user.id }],
+      },
+      _max: { sortOrder: true },
+    });
 
     await db.shortcut.create({
       data: {
+        userId: user.id,
         label,
         icon,
         amount,
@@ -147,7 +192,7 @@ export async function createShortcut(formData: FormData) {
     return { success: true };
   } catch (error) {
     console.error("Failed to create shortcut:", error);
-    return { error: "Gagal membuat shortcut. Pastikan database Supabase terhubung." };
+    return { error: "Gagal membuat shortcut." };
   }
 }
 
@@ -155,9 +200,15 @@ export async function createShortcut(formData: FormData) {
  * Delete a shortcut
  */
 export async function deleteShortcut(id: string) {
+  const user = await getAuthUser();
+  if (!user) {
+    return { error: "Sesi telah berakhir. Silakan login kembali." };
+  }
+
   try {
-    await db.shortcut.delete({
-      where: { id },
+    // If it's a user shortcut, delete it; if preset, can toggle inactive
+    await db.shortcut.deleteMany({
+      where: { id, userId: user.id },
     });
 
     refresh();
@@ -172,6 +223,11 @@ export async function deleteShortcut(id: string) {
  * Toggle shortcut active status
  */
 export async function toggleShortcut(id: string) {
+  const user = await getAuthUser();
+  if (!user) {
+    return { error: "Sesi telah berakhir. Silakan login kembali." };
+  }
+
   try {
     const shortcut = await db.shortcut.findUnique({ where: { id } });
     if (!shortcut) return { error: "Shortcut tidak ditemukan" };

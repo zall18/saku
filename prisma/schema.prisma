@@ -10,6 +10,7 @@ datasource db {
 
 model Transaction {
   id            String   @id @default(cuid())
+  userId        String // Supabase auth.users ID
   amount        Int // dalam Rupiah (tanpa desimal)
   description   String?
   category      String // "daily" | "transport" | "entertainment"
@@ -18,21 +19,25 @@ model Transaction {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
+  @@index([userId])
   @@index([createdAt])
   @@index([category])
 }
 
 model Budget {
   id     String @id @default(cuid())
+  userId String // Supabase auth.users ID
   month  Int // 1-12
   year   Int
   amount Int // target budget bulanan dalam Rupiah
 
-  @@unique([month, year])
+  @@unique([userId, month, year])
+  @@index([userId])
 }
 
 model Shortcut {
   id            String  @id @default(cuid())
+  userId        String? // null = preset bawaan, ada nilai = kustom user
   label         String // "Makan Siang"
   icon          String // emoji "🍚"
   amount        Int // nominal default
@@ -41,4 +46,6 @@ model Shortcut {
   paymentSource String
   sortOrder     Int     @default(0)
   isActive      Boolean @default(true)
+
+  @@index([userId])
 }

@@ -1,11 +1,10 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState, useCallback } from "react";
 import { updateBudget } from "@/features/transaction/transaction-actions";
 import { AmountInput } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/utils";
-import { useState, useCallback } from "react";
 
 const initialState = { error: "", success: false };
 
@@ -36,16 +35,22 @@ export function BudgetForm({ currentBudget }: { currentBudget: number }) {
   const monthName = now.toLocaleDateString("id-ID", { month: "long", year: "numeric" });
 
   return (
-    <div className="saku-glass rounded-[var(--saku-radius-lg)] p-5">
-      <p className="text-sm text-saku-text-secondary mb-4">
-        Budget untuk <span className="font-medium text-saku-text">{monthName}</span>
-      </p>
-
-      {currentBudget > 0 && (
-        <p className="text-xs text-saku-text-muted mb-3">
-          Saat ini: <span className="saku-mono text-saku-accent">{formatCurrency(currentBudget)}</span>
-        </p>
-      )}
+    <div className="saku-card p-6">
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <h3 className="text-sm font-bold text-slate-900">
+            Target Anggaran: {monthName}
+          </h3>
+          <p className="text-xs text-slate-500 mt-0.5">
+            Tentukan batas belanja bulanan Anda
+          </p>
+        </div>
+        {currentBudget > 0 && (
+          <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full saku-mono">
+            Saat ini: {formatCurrency(currentBudget)}
+          </span>
+        )}
+      </div>
 
       <form action={formAction} className="space-y-4">
         <AmountInput
@@ -58,10 +63,16 @@ export function BudgetForm({ currentBudget }: { currentBudget: number }) {
         <input type="hidden" name="year" value={year} />
 
         {state.error && (
-          <p className="text-sm text-saku-danger saku-animate-fade-in">{state.error}</p>
+          <div className="p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
+            <span>⚠️</span>
+            <span>{state.error}</span>
+          </div>
         )}
         {state.success && (
-          <p className="text-sm text-saku-accent saku-animate-fade-in">✓ Budget berhasil disimpan</p>
+          <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs flex items-center gap-2">
+            <span>✓</span>
+            <span>Budget bulan ini berhasil diperbarui di Supabase!</span>
+          </div>
         )}
 
         <Button type="submit" variant="primary" isLoading={pending} className="w-full">

@@ -18,7 +18,6 @@ export function ShortcutButtons({ shortcuts }: ShortcutButtonsProps) {
       setJustTapped(shortcut.id);
       startTransition(async () => {
         await createQuickTransaction(shortcut.id);
-        // Brief delay before resetting visual state
         setTimeout(() => setJustTapped(null), 800);
       });
     },
@@ -27,14 +26,14 @@ export function ShortcutButtons({ shortcuts }: ShortcutButtonsProps) {
 
   if (shortcuts.length === 0) {
     return (
-      <div className="text-center py-6 text-saku-text-muted text-sm">
+      <div className="text-center py-6 text-slate-400 text-sm bg-white rounded-xl border border-slate-200">
         Belum ada shortcut. Tambahkan di Pengaturan.
       </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-3 gap-2">
+    <div className="grid grid-cols-3 sm:grid-cols-6 gap-2.5">
       {shortcuts.map((shortcut) => {
         const isTapped = justTapped === shortcut.id;
 
@@ -45,34 +44,34 @@ export function ShortcutButtons({ shortcuts }: ShortcutButtonsProps) {
             disabled={isPending}
             onClick={() => handleTap(shortcut)}
             className={`
-              relative flex flex-col items-center gap-1 py-3 px-2
-              bg-saku-surface hover:bg-saku-surface-hover
+              group relative flex flex-col items-center justify-center gap-1.5 p-3
+              bg-white hover:bg-slate-50/80
               border rounded-[var(--saku-radius-md)]
               transition-all duration-150 ease-out
-              active:scale-[0.94]
+              active:scale-[0.95] shadow-xs hover:shadow-sm
               disabled:opacity-60 disabled:pointer-events-none
               cursor-pointer select-none
               ${
                 isTapped
-                  ? "border-saku-accent bg-saku-accent/10 saku-animate-pulse-success"
-                  : "border-saku-border"
+                  ? "border-emerald-500 bg-emerald-50/50 saku-animate-pulse-success"
+                  : "border-slate-200 hover:border-slate-300"
               }
             `}
           >
             {/* Check overlay on success */}
             {isTapped && (
-              <div className="absolute inset-0 flex items-center justify-center rounded-[var(--saku-radius-md)] bg-saku-accent/10">
-                <span className="text-2xl saku-animate-check-pop">✓</span>
+              <div className="absolute inset-0 flex items-center justify-center rounded-[var(--saku-radius-md)] bg-emerald-500/10 z-10">
+                <span className="text-2xl saku-animate-check-pop text-emerald-600 font-bold">✓</span>
               </div>
             )}
 
-            <span className="text-2xl leading-none" aria-hidden="true">
+            <div className="w-10 h-10 rounded-full bg-slate-100 group-hover:bg-emerald-50/80 flex items-center justify-center text-xl transition-colors">
               {shortcut.icon}
-            </span>
-            <span className="text-xs font-medium text-saku-text truncate w-full text-center">
+            </div>
+            <span className="text-xs font-semibold text-slate-800 truncate w-full text-center">
               {shortcut.label}
             </span>
-            <span className="text-[10px] saku-mono text-saku-text-muted">
+            <span className="text-[11px] saku-mono font-medium text-emerald-600">
               {formatCurrencyShort(shortcut.amount)}
             </span>
           </button>

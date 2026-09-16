@@ -11,17 +11,17 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    "bg-saku-accent text-saku-bg font-semibold hover:brightness-110 active:scale-[0.97] shadow-[0_0_20px_rgba(52,211,153,0.2)]",
+    "bg-emerald-600 text-white font-semibold hover:bg-emerald-700 active:scale-[0.97] shadow-sm hover:shadow transition-all",
   secondary:
-    "bg-saku-surface text-saku-text hover:bg-saku-surface-hover border border-saku-border active:scale-[0.97]",
+    "bg-white text-slate-700 hover:bg-slate-50 border border-slate-200 hover:border-slate-300 shadow-sm active:scale-[0.97]",
   ghost:
-    "bg-transparent text-saku-text-secondary hover:bg-saku-surface-hover hover:text-saku-text active:scale-[0.97]",
+    "bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 active:scale-[0.97]",
   shortcut:
-    "bg-saku-surface hover:bg-saku-surface-hover border border-saku-border active:scale-[0.95] active:border-saku-accent transition-all",
+    "bg-white hover:bg-emerald-50/40 border border-slate-200 hover:border-emerald-300 shadow-sm hover:shadow active:scale-[0.95] text-slate-800 transition-all",
   danger:
-    "bg-saku-danger/10 text-saku-danger hover:bg-saku-danger/20 active:scale-[0.97]",
+    "bg-rose-50 text-rose-600 hover:bg-rose-100 border border-rose-200 active:scale-[0.97]",
   pill:
-    "bg-saku-surface text-saku-text-secondary hover:bg-saku-surface-hover border border-saku-border data-[active=true]:bg-saku-accent/15 data-[active=true]:text-saku-accent data-[active=true]:border-saku-accent/40",
+    "bg-slate-100 text-slate-600 hover:bg-slate-200/70 border border-transparent data-[active=true]:bg-emerald-50 data-[active=true]:text-emerald-700 data-[active=true]:border-emerald-300 data-[active=true]:font-medium",
 };
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(

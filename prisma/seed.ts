@@ -11,6 +11,7 @@ const defaultShortcuts = [
     subCategory: "makan_siang",
     paymentSource: "qris",
     sortOrder: 1,
+    userId: null,
   },
   {
     label: "Kopi",
@@ -20,6 +21,7 @@ const defaultShortcuts = [
     subCategory: "kopi",
     paymentSource: "qris",
     sortOrder: 2,
+    userId: null,
   },
   {
     label: "Shuttle",
@@ -29,6 +31,7 @@ const defaultShortcuts = [
     subCategory: "shuttle",
     paymentSource: "cash",
     sortOrder: 3,
+    userId: null,
   },
   {
     label: "Laundry",
@@ -38,6 +41,7 @@ const defaultShortcuts = [
     subCategory: "laundry",
     paymentSource: "cash",
     sortOrder: 4,
+    userId: null,
   },
   {
     label: "Jajan",
@@ -47,6 +51,7 @@ const defaultShortcuts = [
     subCategory: "jajan",
     paymentSource: "qris",
     sortOrder: 5,
+    userId: null,
   },
   {
     label: "Game",
@@ -56,40 +61,24 @@ const defaultShortcuts = [
     subCategory: "game",
     paymentSource: "ewallet",
     sortOrder: 6,
+    userId: null,
   },
 ];
 
 async function main() {
-  console.log("🌱 Seeding database...");
+  console.log("🌱 Seeding shortcuts to database...");
 
-  // Seed shortcuts
   for (const shortcut of defaultShortcuts) {
+    const id = shortcut.label.toLowerCase().replace(/\s+/g, "_");
     await prisma.shortcut.upsert({
-      where: { id: shortcut.label.toLowerCase().replace(/\s+/g, "_") },
+      where: { id },
       update: shortcut,
       create: {
-        id: shortcut.label.toLowerCase().replace(/\s+/g, "_"),
+        id,
         ...shortcut,
       },
     });
   }
-
-  // Seed default budget for current month
-  const now = new Date();
-  await prisma.budget.upsert({
-    where: {
-      month_year: {
-        month: now.getMonth() + 1,
-        year: now.getFullYear(),
-      },
-    },
-    update: {},
-    create: {
-      month: now.getMonth() + 1,
-      year: now.getFullYear(),
-      amount: 1500000, // Rp 1.500.000 default
-    },
-  });
 
   console.log("✅ Seeding complete!");
 }

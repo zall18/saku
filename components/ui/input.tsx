@@ -33,7 +33,7 @@ const AmountInput = forwardRef<HTMLInputElement, AmountInputProps>(
 
     return (
       <div className="relative">
-        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-saku-text-muted text-lg font-medium">
+        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg font-medium">
           Rp
         </span>
         <input
@@ -45,13 +45,13 @@ const AmountInput = forwardRef<HTMLInputElement, AmountInputProps>(
           onChange={handleChange}
           className={`
             w-full pl-12 pr-4 py-3.5
-            bg-saku-surface-hover border border-saku-border
+            bg-slate-50 border border-slate-200
             rounded-[var(--saku-radius-md)]
-            text-right text-2xl font-semibold saku-mono
-            text-saku-text
-            placeholder:text-saku-text-muted placeholder:text-lg placeholder:font-normal
-            focus:outline-none focus:border-saku-accent focus:ring-1 focus:ring-saku-accent/30
-            transition-colors duration-150
+            text-right text-2xl font-bold saku-mono
+            text-slate-900
+            placeholder:text-slate-400 placeholder:text-lg placeholder:font-normal
+            focus:outline-none focus:bg-white focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/15
+            transition-all duration-150
             ${className}
           `}
           {...props}
@@ -85,7 +85,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
         {label ? (
           <label
             htmlFor={id}
-            className="block text-sm font-medium text-saku-text-secondary mb-1.5"
+            className="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5"
           >
             {label}
           </label>
@@ -95,12 +95,12 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
           id={id}
           className={`
             w-full px-4 py-2.5
-            bg-saku-surface-hover border border-saku-border
+            bg-slate-50 border border-slate-200
             rounded-[var(--saku-radius-md)]
-            text-sm text-saku-text
-            placeholder:text-saku-text-muted
-            focus:outline-none focus:border-saku-accent focus:ring-1 focus:ring-saku-accent/30
-            transition-colors duration-150
+            text-sm text-slate-900
+            placeholder:text-slate-400
+            focus:outline-none focus:bg-white focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/15
+            transition-all duration-150
             ${className}
           `}
           {...props}

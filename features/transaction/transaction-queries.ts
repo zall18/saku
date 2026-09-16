@@ -1,73 +1,74 @@
 import { db } from "@/lib/db";
 import { startOfToday, startOfMonth, getDailyBudget, getDayLabel } from "@/lib/utils";
 import { DEFAULT_SHORTCUTS } from "@/lib/constants";
+import { getAuthUser } from "@/lib/supabase/server";
 import type { DashboardSummary, DailyBreakdown, TransactionData, ShortcutData } from "./transaction-types";
 
 /**
- * Check if the database URL is configured
+ * Get active user ID or fallback
  */
-export function isDatabaseConfigured(): boolean {
-  const url = process.env.DATABASE_URL || "";
-  return Boolean(url && !url.includes("YOUR_PROJECT_REF"));
+async function getCurrentUserId(): Promise<string | null> {
+  const user = await getAuthUser();
+  return user?.id ?? null;
 }
 
 /**
- * Check if the database is configured and reachable
- */
-export async function isDatabaseConnected(): Promise<boolean> {
-  if (!isDatabaseConfigured()) {
-    return false;
-  }
-  try {
-    await db.$queryRaw`SELECT 1`;
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-/**
- * Get all transactions for today, sorted by most recent first
+ * Get all transactions for today for current user
  */
 export async function getTodayTransactions(): Promise<TransactionData[]> {
-  if (!isDatabaseConfigured()) return [];
   try {
+    const userId = await getCurrentUserId();
+    if (!userId) return [];
+
     const today = startOfToday();
     return await db.transaction.findMany({
-      where: { createdAt: { gte: today } },
+      where: {
+        userId,
+        createdAt: { gte: today },
+      },
       orderBy: { createdAt: "desc" },
     });
-  } catch {
+  } catch (err) {
+    console.error("getTodayTransactions error:", err);
     return [];
   }
 }
 
 /**
- * Get recent transactions (last N)
+ * Get recent transactions (last N) for current user
  */
 export async function getRecentTransactions(
   limit: number = 20
 ): Promise<TransactionData[]> {
-  if (!isDatabaseConfigured()) return [];
   try {
+    const userId = await getCurrentUserId();
+    if (!userId) return [];
+
     return await db.transaction.findMany({
+      where: { userId },
       orderBy: { createdAt: "desc" },
       take: limit,
     });
-  } catch {
+  } catch (err) {
+    console.error("getRecentTransactions error:", err);
     return [];
   }
 }
 
 /**
- * Get total spent today
+ * Get total spent today for current user
  */
 export async function getTodayTotal(): Promise<number> {
-  if (!isDatabaseConfigured()) return 0;
   try {
+    const userId = await getCurrentUserId();
+    if (!userId) return 0;
+
     const today = startOfToday();
     const result = await db.transaction.aggregate({
-      where: { createdAt: { gte: today } },
+      where: {
+        userId,
+        createdAt: { gte: today },
+      },
       _sum: { amount: true },
     });
     return result._sum.amount ?? 0;
@@ -77,14 +78,19 @@ export async function getTodayTotal(): Promise<number> {
 }
 
 /**
- * Get total spent this month
+ * Get total spent this month for current user
  */
 export async function getMonthlyTotal(): Promise<number> {
-  if (!isDatabaseConfigured()) return 0;
   try {
+    const userId = await getCurrentUserId();
+    if (!userId) return 0;
+
     const monthStart = startOfMonth();
     const result = await db.transaction.aggregate({
-      where: { createdAt: { gte: monthStart } },
+      where: {
+        userId,
+        createdAt: { gte: monthStart },
+      },
       _sum: { amount: true },
     });
     return result._sum.amount ?? 0;
@@ -94,15 +100,18 @@ export async function getMonthlyTotal(): Promise<number> {
 }
 
 /**
- * Get budget for current month
+ * Get budget for current month for current user
  */
 export async function getCurrentBudget(): Promise<number> {
-  if (!isDatabaseConfigured()) return 1500000;
   try {
+    const userId = await getCurrentUserId();
+    if (!userId) return 1500000;
+
     const now = new Date();
     const budget = await db.budget.findUnique({
       where: {
-        month_year: {
+        userId_month_year: {
+          userId,
           month: now.getMonth() + 1,
           year: now.getFullYear(),
         },
@@ -148,8 +157,9 @@ export async function getDashboardSummary(): Promise<DashboardSummary> {
 export async function getDailyBreakdown(days: number = 7): Promise<DailyBreakdown[]> {
   const result: DailyBreakdown[] = [];
   const now = new Date();
+  const userId = await getCurrentUserId();
 
-  if (!isDatabaseConfigured()) {
+  if (!userId) {
     for (let i = days - 1; i >= 0; i--) {
       const date = new Date(now);
       date.setDate(date.getDate() - i);
@@ -175,6 +185,7 @@ export async function getDailyBreakdown(days: number = 7): Promise<DailyBreakdow
       try {
         const aggregate = await db.transaction.aggregate({
           where: {
+            userId,
             createdAt: {
               gte: date,
               lt: nextDate,
@@ -209,15 +220,20 @@ export async function getDailyBreakdown(days: number = 7): Promise<DailyBreakdow
 }
 
 /**
- * Get all active shortcuts, sorted
+ * Get all active shortcuts (presets or user-specific)
  */
 export async function getShortcuts(): Promise<ShortcutData[]> {
-  if (!isDatabaseConfigured()) return DEFAULT_SHORTCUTS;
   try {
+    const userId = await getCurrentUserId();
+
     const shortcuts = await db.shortcut.findMany({
-      where: { isActive: true },
+      where: {
+        isActive: true,
+        OR: [{ userId: null }, ...(userId ? [{ userId }] : [])],
+      },
       orderBy: { sortOrder: "asc" },
     });
+
     if (shortcuts.length > 0) return shortcuts;
     return DEFAULT_SHORTCUTS;
   } catch {
@@ -226,14 +242,19 @@ export async function getShortcuts(): Promise<ShortcutData[]> {
 }
 
 /**
- * Get all shortcuts (including inactive), for settings page
+ * Get all shortcuts (including inactive) for settings page
  */
 export async function getAllShortcuts(): Promise<ShortcutData[]> {
-  if (!isDatabaseConfigured()) return DEFAULT_SHORTCUTS;
   try {
+    const userId = await getCurrentUserId();
+
     const shortcuts = await db.shortcut.findMany({
+      where: {
+        OR: [{ userId: null }, ...(userId ? [{ userId }] : [])],
+      },
       orderBy: { sortOrder: "asc" },
     });
+
     if (shortcuts.length > 0) return shortcuts;
     return DEFAULT_SHORTCUTS;
   } catch {
@@ -242,13 +263,17 @@ export async function getAllShortcuts(): Promise<ShortcutData[]> {
 }
 
 /**
- * Get budget for a specific month
+ * Get budget for a specific month for current user
  */
 export async function getBudget(month: number, year: number) {
-  if (!isDatabaseConfigured()) return null;
   try {
+    const userId = await getCurrentUserId();
+    if (!userId) return null;
+
     return await db.budget.findUnique({
-      where: { month_year: { month, year } },
+      where: {
+        userId_month_year: { userId, month, year },
+      },
     });
   } catch {
     return null;

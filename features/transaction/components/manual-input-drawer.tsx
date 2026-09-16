@@ -17,24 +17,23 @@ export function ManualInputDrawer() {
         type="button"
         onClick={handleOpen}
         className="
-          w-full flex items-center justify-center gap-2.5
-          py-3.5 px-4
-          bg-saku-surface-hover/50 hover:bg-saku-surface-hover
-          border border-dashed border-saku-border
+          w-full flex items-center justify-center gap-2
+          py-3 px-4
+          bg-emerald-50 hover:bg-emerald-100/70
+          border border-dashed border-emerald-300 hover:border-emerald-400
           rounded-[var(--saku-radius-md)]
-          text-sm font-medium text-saku-text-secondary
-          hover:text-saku-text hover:border-saku-accent/40
+          text-sm font-bold text-emerald-800
           transition-all duration-150
           active:scale-[0.98]
-          cursor-pointer select-none
+          cursor-pointer select-none shadow-xs
         "
       >
-        <span className="text-lg leading-none">+</span>
-        Input Manual
+        <span className="text-base font-bold leading-none">+</span>
+        Catat Transaksi Manual
       </button>
 
       {/* Drawer with form */}
-      <Drawer open={open} onClose={handleClose} title="Tambah Transaksi">
+      <Drawer open={open} onClose={handleClose} title="Catat Transaksi Baru">
         <QuickInputForm onSuccess={handleClose} />
       </Drawer>
     </>

@@ -1,58 +1,62 @@
 @import "tailwindcss";
 
-/* ============================
+/* ===================================================
    SAKU Design System
-   Dark-first, mobile-first
-   ============================ */
+   Modern, Bright & Clean Dashboard (Light-First)
+   =================================================== */
 
 :root {
-  /* Brand palette */
-  --saku-bg: #0c0f1a;
-  --saku-surface: #141828;
-  --saku-surface-hover: #1a2035;
-  --saku-surface-raised: #1e2540;
-  --saku-border: #252d45;
-  --saku-border-subtle: #1c2338;
+  /* Brand palette - Clean, Bright, Crisp */
+  --saku-bg: #f8fafc;
+  --saku-surface: #ffffff;
+  --saku-surface-hover: #f1f5f9;
+  --saku-surface-raised: #ffffff;
+  --saku-border: #e2e8f0;
+  --saku-border-subtle: #edf2f7;
 
-  /* Text */
-  --saku-text: #f0f2f8;
-  --saku-text-secondary: #8892b0;
-  --saku-text-muted: #5a6380;
+  /* Text hierarchy */
+  --saku-text: #0f172a;
+  --saku-text-secondary: #475569;
+  --saku-text-muted: #94a3b8;
 
-  /* Accent — Emerald */
-  --saku-accent: #34d399;
-  --saku-accent-dim: #10b981;
-  --saku-accent-glow: rgba(52, 211, 153, 0.15);
+  /* Accent — Emerald / Teal */
+  --saku-accent: #10b981;
+  --saku-accent-dim: #059669;
+  --saku-accent-glow: rgba(16, 185, 129, 0.15);
+
+  /* Secondary Accent — Electric Indigo */
+  --saku-indigo: #4f46e5;
+  --saku-indigo-light: #eef2ff;
 
   /* Semantic colors */
-  --saku-expense: #f472b6;
-  --saku-expense-dim: #ec4899;
-  --saku-expense-glow: rgba(244, 114, 182, 0.15);
-  --saku-warning: #fbbf24;
-  --saku-warning-glow: rgba(251, 191, 36, 0.12);
-  --saku-danger: #f87171;
+  --saku-expense: #f43f5e;
+  --saku-expense-dim: #e11d48;
+  --saku-expense-glow: rgba(244, 63, 94, 0.12);
+  --saku-warning: #f59e0b;
+  --saku-warning-glow: rgba(245, 158, 11, 0.12);
+  --saku-danger: #ef4444;
 
   /* Category colors */
-  --saku-cat-daily: #34d399;
-  --saku-cat-transport: #60a5fa;
-  --saku-cat-entertainment: #c084fc;
+  --saku-cat-daily: #10b981;
+  --saku-cat-transport: #3b82f6;
+  --saku-cat-entertainment: #8b5cf6;
 
-  /* Spacing */
+  /* Radius */
   --saku-radius-sm: 8px;
   --saku-radius-md: 12px;
   --saku-radius-lg: 16px;
-  --saku-radius-xl: 24px;
+  --saku-radius-xl: 20px;
   --saku-radius-full: 9999px;
 
-  /* Shadows */
-  --saku-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
-  --saku-shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.4);
+  /* Elevation Shadows */
+  --saku-shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
+  --saku-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
+  --saku-shadow-lg: 0 12px 28px -4px rgba(15, 23, 42, 0.08), 0 4px 12px -2px rgba(15, 23, 42, 0.04);
 
   /* Fonts */
   --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
   --font-mono: var(--font-jetbrains-mono), "JetBrains Mono", monospace;
 
-  /* Background & foreground (Tailwind compat) */
   --background: var(--saku-bg);
   --foreground: var(--saku-text);
 }
@@ -71,6 +75,7 @@
   --color-saku-text-muted: var(--saku-text-muted);
   --color-saku-accent: var(--saku-accent);
   --color-saku-accent-dim: var(--saku-accent-dim);
+  --color-saku-indigo: var(--saku-indigo);
   --color-saku-expense: var(--saku-expense);
   --color-saku-expense-dim: var(--saku-expense-dim);
   --color-saku-warning: var(--saku-warning);
@@ -82,9 +87,9 @@
   --font-mono: var(--font-mono);
 }
 
-/* ============================
+/* ===================================================
    Base styles
-   ============================ */
+   =================================================== */
 
 * {
   -webkit-tap-highlight-color: transparent;
@@ -102,15 +107,12 @@ body {
   background: var(--saku-bg);
   color: var(--saku-text);
   min-height: 100dvh;
-  overscroll-behavior-y: contain;
 }
 
-/* ============================
-   Scrollbar (thin, subtle)
-   ============================ */
-
+/* Scrollbar */
 ::-webkit-scrollbar {
-  width: 4px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -118,18 +120,22 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--saku-border);
-  border-radius: 4px;
+  background: #cbd5e1;
+  border-radius: 9999px;
 }
 
-/* ============================
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* ===================================================
    Animations
-   ============================ */
+   =================================================== */
 
 @keyframes saku-fade-in {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(6px);
   }
   to {
     opacity: 1;
@@ -162,7 +168,7 @@ body {
 @keyframes saku-scale-in {
   from {
     opacity: 0;
-    transform: scale(0.95);
+    transform: scale(0.96);
   }
   to {
     opacity: 1;
@@ -177,7 +183,7 @@ body {
   }
   50% {
     transform: scale(0.96);
-    box-shadow: 0 0 0 8px transparent;
+    box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.2);
   }
   100% {
     transform: scale(1);
@@ -209,30 +215,29 @@ body {
   }
 }
 
-@keyframes saku-check-pop {
-  0% {
-    opacity: 0;
-    transform: scale(0);
-  }
-  50% {
-    transform: scale(1.2);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
+/* ===================================================
+   Utility classes
+   =================================================== */
+
+.saku-card {
+  background: #ffffff;
+  border: 1px solid var(--saku-border);
+  box-shadow: var(--saku-shadow-sm);
+  border-radius: var(--saku-radius-lg);
+  transition: all 0.2s ease;
 }
 
-/* ============================
-   Utility classes
-   ============================ */
+.saku-card-hover:hover {
+  border-color: #cbd5e1;
+  box-shadow: var(--saku-shadow);
+}
 
 .saku-animate-fade-in {
-  animation: saku-fade-in 0.3s ease-out;
+  animation: saku-fade-in 0.25s ease-out;
 }
 
 .saku-animate-slide-up {
-  animation: saku-slide-up 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: saku-slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .saku-animate-scale-in {
@@ -240,56 +245,47 @@ body {
 }
 
 .saku-animate-pulse-success {
-  animation: saku-pulse-success 0.4s ease-out;
+  animation: saku-pulse-success 0.35s ease-out;
 }
 
 .saku-animate-bar-grow {
-  animation: saku-bar-grow 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: saku-bar-grow 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   transform-origin: bottom;
 }
 
 .saku-animate-progress-fill {
-  animation: saku-progress-fill 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: saku-progress-fill 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.saku-animate-check-pop {
-  animation: saku-check-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-/* Glass card */
+/* Glass & translucent effects for modern look */
 .saku-glass {
-  background: linear-gradient(
-    135deg,
-    rgba(20, 24, 40, 0.8),
-    rgba(30, 37, 64, 0.6)
-  );
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(12px);
-  border: 1px solid var(--saku-border-subtle);
+  border: 1px solid rgba(226, 232, 240, 0.8);
 }
 
-/* Skeleton loading */
+/* Skeleton loader for light mode */
 .saku-skeleton {
   background: linear-gradient(
     90deg,
-    var(--saku-surface) 25%,
-    var(--saku-surface-hover) 50%,
-    var(--saku-surface) 75%
+    #f1f5f9 25%,
+    #e2e8f0 50%,
+    #f1f5f9 75%
   );
   background-size: 200% 100%;
   animation: saku-shimmer 1.5s infinite;
   border-radius: var(--saku-radius-md);
 }
 
-/* Monospace for numbers */
 .saku-mono {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.02em;
 }
 
-/* Drawer backdrop */
+/* Backdrop */
 .saku-backdrop {
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(15, 23, 42, 0.35);
   backdrop-filter: blur(4px);
 }
 
