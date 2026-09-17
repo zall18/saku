@@ -43,7 +43,7 @@ export default function LoginPage() {
             </div>
             <div className="flex items-start gap-2.5 text-xs text-slate-600">
               <span className="text-emerald-600 font-bold text-sm leading-none">✓</span>
-              <span><strong>Kuota Harian</strong>: Kontrol batas belanja agar tidak boncos</span>
+              <span><strong>Budget Harian</strong>: Kontrol batas belanja agar tidak boncos</span>
             </div>
             <div className="flex items-start gap-2.5 text-xs text-slate-600">
               <span className="text-emerald-600 font-bold text-sm leading-none">✓</span>

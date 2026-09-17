@@ -76,14 +76,14 @@ export function ProductPreview() {
                     Rp 27.000
                   </span>
                   <span className="text-xs text-slate-500 mt-1 block">
-                    Target: Rp 50.000/hari
+                    Budget: Rp 50.000/hari
                   </span>
                 </div>
               </div>
 
               <div className="saku-card p-4">
                 <div className="flex items-center justify-between text-xs font-semibold text-slate-500">
-                  <span>Sisa Kuota Hari Ini</span>
+                  <span>Sisa Budget Hari Ini</span>
                   <span>🎯</span>
                 </div>
                 <div className="mt-2">
@@ -91,7 +91,7 @@ export function ProductPreview() {
                     Rp 23.000
                   </span>
                   <span className="text-xs text-emerald-700 font-semibold mt-1 block">
-                    Tersisa untuk hari ini
+                    Sisa budget untuk hari ini
                   </span>
                 </div>
               </div>

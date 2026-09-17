@@ -43,22 +43,22 @@ export function FeaturesBento() {
             </div>
           </div>
 
-          {/* Card 2: Smart Daily Quota */}
+          {/* Card 2: Smart Daily Budget */}
           <div className="p-6 sm:p-8 rounded-3xl bg-slate-50 border border-slate-200/80 flex flex-col justify-between hover:border-emerald-300 transition-all shadow-xs group">
             <div>
               <div className="w-12 h-12 rounded-2xl bg-teal-100 text-teal-700 flex items-center justify-center text-2xl mb-4 group-hover:scale-105 transition-transform">
                 🎯
               </div>
               <h3 className="text-xl font-black text-slate-900 mb-2">
-                Kuota Belanja Harian
+                Budget Belanja Harian
               </h3>
               <p className="text-sm text-slate-600 leading-relaxed">
-                Budget bulanan dibagi rata otomatis sesuai sisa hari. Anda akan langsung tahu berapa batas aman uang yang boleh dibelanjakan hari ini.
+                Budget bulanan dibagi rata otomatis sesuai hari dalam sebulan. Anda akan langsung tahu batas aman uang yang boleh dibelanjakan hari ini.
               </p>
             </div>
 
             <div className="mt-6 p-3 rounded-2xl bg-white border border-emerald-200 text-center">
-              <span className="text-xs text-slate-400 block font-medium">Contoh Kuota Hari Ini:</span>
+              <span className="text-xs text-slate-400 block font-medium">Contoh Budget Hari Ini:</span>
               <span className="text-xl font-bold text-emerald-600 saku-mono">Rp 50.000 / hari</span>
             </div>
           </div>
@@ -73,7 +73,7 @@ export function FeaturesBento() {
                 Grafik Batang 7 Hari
               </h3>
               <p className="text-sm text-slate-600 leading-relaxed">
-                Visualisasi pengeluaran seminggu terakhir dengan garis kuota harian. Batang berwarna hijau saat hemat, dan merah jika melewati batas.
+                Visualisasi pengeluaran seminggu terakhir dengan garis batas budget harian. Batang berwarna hijau saat hemat, dan merah jika melewati batas.
               </p>
             </div>
 

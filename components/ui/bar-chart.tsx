@@ -36,14 +36,14 @@ export function BarChart({ data, dailyBudget }: BarChartProps) {
 
             {/* Bar container */}
             <div className="w-full relative flex-1 flex items-end bg-slate-50 rounded-t-md overflow-hidden">
-              {/* Daily Budget target guide line */}
+              {/* Daily Budget guide line */}
               {dailyBudget > 0 && (
                 <div
                   className="absolute w-full border-t border-dashed border-slate-300 z-10 pointer-events-none"
                   style={{
                     bottom: `${(dailyBudget / maxValue) * 100}%`,
                   }}
-                  title={`Kuota Harian: ${formatCurrencyShort(dailyBudget)}`}
+                  title={`Budget Harian: ${formatCurrencyShort(dailyBudget)}`}
                 />
               )}
 

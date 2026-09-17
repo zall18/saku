@@ -39,7 +39,7 @@ export function BudgetForm({ currentBudget }: { currentBudget: number }) {
       <div className="flex items-center justify-between mb-4">
         <div>
           <h3 className="text-sm font-bold text-slate-900">
-            Target Anggaran: {monthName}
+            Budget Bulanan: {monthName}
           </h3>
           <p className="text-xs text-slate-500 mt-0.5">
             Tentukan batas belanja bulanan Anda

@@ -23,7 +23,7 @@ export function HeroSection() {
 
         {/* Subtitle */}
         <p className="text-base sm:text-lg md:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed mb-8">
-          Aplikasi keuangan yang dirancang untuk kecepatan: pencatatan <strong>1-tap dalam 3 detik</strong>, perhitungan <strong>kuota belanja harian otomatis</strong>, dan sinkronisasi cloud real-time dengan Supabase.
+          Aplikasi keuangan yang dirancang untuk kecepatan: pencatatan <strong>1-tap dalam 3 detik</strong>, perhitungan <strong>budget harian otomatis</strong>, dan sinkronisasi cloud real-time dengan Supabase.
         </p>
 
         {/* CTA Buttons */}
@@ -82,7 +82,7 @@ export function HeroSection() {
           </div>
           <div className="flex items-center justify-center gap-2 text-xs font-semibold text-slate-600 py-1">
             <span className="text-base">🎯</span>
-            <span>Hitung Kuota Harian</span>
+            <span>Batas Budget Harian</span>
           </div>
           <div className="flex items-center justify-center gap-2 text-xs font-semibold text-slate-600 py-1">
             <span className="text-base">☁️</span>

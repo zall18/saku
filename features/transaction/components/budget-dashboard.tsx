@@ -97,15 +97,15 @@ export function BudgetDashboard({ summary, dailyBreakdown }: BudgetDashboardProp
               {formatCurrency(todayTotal)}
             </span>
             <span className="text-xs text-slate-500 mt-1 block">
-              Target: {formatCurrency(dailyBudget)}/hari
+              Budget: {formatCurrency(dailyBudget)}/hari
             </span>
           </div>
         </div>
 
-        {/* Card 4: Sisa Kuota Hari Ini */}
+        {/* Card 4: Sisa Budget Hari Ini */}
         <div className="saku-card p-4 flex flex-col justify-between hover:border-slate-300 transition-all">
           <div className="flex items-center justify-between text-xs font-semibold text-slate-500 uppercase tracking-wider">
-            <span>Sisa Kuota Hari Ini</span>
+            <span>Sisa Budget Hari Ini</span>
             <span className="text-base">🎯</span>
           </div>
           <div className="mt-2.5">
@@ -117,7 +117,7 @@ export function BudgetDashboard({ summary, dailyBreakdown }: BudgetDashboardProp
               {formatCurrency(dailyRemaining)}
             </span>
             <span className="text-xs text-slate-500 mt-1 block">
-              {todayOverBudget ? "Melebihi kuota harian" : "Tersisa untuk hari ini"}
+              {todayOverBudget ? "Melebihi budget harian" : "Sisa budget untuk hari ini"}
             </span>
           </div>
         </div>
@@ -130,7 +130,7 @@ export function BudgetDashboard({ summary, dailyBreakdown }: BudgetDashboardProp
           <div>
             <div className="flex items-center justify-between mb-3">
               <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                Penggunaan Anggaran
+                Penggunaan Budget
               </span>
               <span className="text-sm font-bold text-slate-900 saku-mono">
                 {percentUsed}%
@@ -151,18 +151,18 @@ export function BudgetDashboard({ summary, dailyBreakdown }: BudgetDashboardProp
                 <span className="font-semibold text-slate-800 saku-mono">{formatCurrency(monthlyTotal)}</span>
               </div>
               <div className="flex justify-between py-1 border-b border-slate-100">
-                <span className="text-slate-500">Target Budget:</span>
+                <span className="text-slate-500">Budget Bulanan:</span>
                 <span className="font-semibold text-slate-800 saku-mono">{formatCurrency(monthlyBudget)}</span>
               </div>
               <div className="flex justify-between py-1">
-                <span className="text-slate-500">Sisa Kuota:</span>
+                <span className="text-slate-500">Sisa Budget:</span>
                 <span className="font-semibold text-emerald-600 saku-mono">{formatCurrency(monthlyRemaining)}</span>
               </div>
             </div>
           </div>
 
           <p className="text-[11px] text-slate-400 mt-4 leading-relaxed">
-            💡 Kuota harian dihitung dari total budget dibagi jumlah hari dalam bulan berjalan.
+            💡 Alokasi budget harian dihitung otomatis dari budget bulanan dibagi jumlah hari dalam bulan ini.
           </p>
         </div>
 

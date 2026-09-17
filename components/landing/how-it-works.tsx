@@ -4,7 +4,7 @@ export function HowItWorks() {
       num: "01",
       icon: "🎯",
       title: "Tetapkan Budget Bulanan",
-      desc: "Masukkan target maksimal pengeluaran bulan ini (misal Rp 1.500.000). Saku otomatis membagi kuota belanja harian Anda.",
+      desc: "Tentukan batas maksimal budget bulan ini (misal Rp 1.500.000). Saku otomatis membagi alokasi budget harian Anda.",
     },
     {
       num: "02",
@@ -16,7 +16,7 @@ export function HowItWorks() {
       num: "03",
       icon: "📈",
       title: "Pantau & Bebas Boncos",
-      desc: "Lihat kuota tersisa hari ini dan tren grafik 7 hari. Anda selalu tahu apakah pengeluaran masih dalam batas aman.",
+      desc: "Lihat sisa budget hari ini dan tren grafik 7 hari. Anda selalu tahu apakah pengeluaran masih dalam batas aman.",
     },
   ];
 

@@ -48,6 +48,60 @@ export async function createTransaction(formData: FormData) {
 }
 
 /**
+ * Update an existing transaction (edit typo/amount/category/paymentSource/description)
+ */
+export async function updateTransaction(formData: FormData) {
+  const user = await getAuthUser();
+  if (!user) {
+    return { error: "Sesi telah berakhir. Silakan login kembali." };
+  }
+
+  const id = formData.get("id") as string;
+  const amount = parseInt(String(formData.get("amount")).replace(/[^\d]/g, ""), 10);
+  const description = formData.get("description") as string | null;
+  const category = formData.get("category") as string;
+  const paymentSource = formData.get("paymentSource") as string;
+
+  if (!id) {
+    return { error: "ID Transaksi tidak valid" };
+  }
+  if (!amount || amount <= 0) {
+    return { error: "Nominal harus diisi" };
+  }
+  if (!category) {
+    return { error: "Kategori harus dipilih" };
+  }
+  if (!paymentSource) {
+    return { error: "Sumber dana harus dipilih" };
+  }
+
+  try {
+    const existing = await db.transaction.findFirst({
+      where: { id, userId: user.id },
+    });
+    if (!existing) {
+      return { error: "Transaksi tidak ditemukan atau bukan milik Anda" };
+    }
+
+    await db.transaction.update({
+      where: { id },
+      data: {
+        amount,
+        description: description || null,
+        category,
+        paymentSource,
+      },
+    });
+
+    refresh();
+    return { success: true };
+  } catch (error) {
+    console.error("Failed to update transaction:", error);
+    return { error: "Gagal memperbarui transaksi." };
+  }
+}
+
+/**
  * Create a transaction from a shortcut (1-tap)
  */
 export async function createQuickTransaction(shortcutId: string) {
@@ -197,6 +251,57 @@ export async function createShortcut(formData: FormData) {
 }
 
 /**
+ * Update an existing shortcut
+ */
+export async function updateShortcut(formData: FormData) {
+  const user = await getAuthUser();
+  if (!user) {
+    return { error: "Sesi telah berakhir. Silakan login kembali." };
+  }
+
+  const id = formData.get("id") as string;
+  const label = formData.get("label") as string;
+  const icon = formData.get("icon") as string;
+  const amount = parseInt(String(formData.get("amount")).replace(/[^\d]/g, ""), 10);
+  const category = formData.get("category") as string;
+  const paymentSource = formData.get("paymentSource") as string;
+
+  if (!id || !label || !icon || !amount || !category || !paymentSource) {
+    return { error: "Semua field harus diisi" };
+  }
+
+  try {
+    const existing = await db.shortcut.findFirst({
+      where: {
+        id,
+        OR: [{ userId: user.id }, { userId: null }],
+      },
+    });
+
+    if (!existing) {
+      return { error: "Shortcut tidak ditemukan" };
+    }
+
+    await db.shortcut.update({
+      where: { id },
+      data: {
+        label,
+        icon,
+        amount,
+        category,
+        paymentSource,
+      },
+    });
+
+    refresh();
+    return { success: true };
+  } catch (error) {
+    console.error("Failed to update shortcut:", error);
+    return { error: "Gagal memperbarui shortcut." };
+  }
+}
+
+/**
  * Delete a shortcut
  */
 export async function deleteShortcut(id: string) {
@@ -206,7 +311,6 @@ export async function deleteShortcut(id: string) {
   }
 
   try {
-    // If it's a user shortcut, delete it; if preset, can toggle inactive
     await db.shortcut.deleteMany({
       where: { id, userId: user.id },
     });
